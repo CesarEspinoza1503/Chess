@@ -5,7 +5,7 @@
 using namespace std;
 
 Position::Position(int x,int y){
-	if((x>=0&&x<=7) && (y>=0&&y<=7)){ //validacion out of bounds
+	if((x>=0 && x<=7) && (y>=0 && y<=7)){ //validacion out of bounds
 		this->x = x;
 		this->y = y;
 	}

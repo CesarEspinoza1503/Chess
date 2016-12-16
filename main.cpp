@@ -8,6 +8,7 @@
 #include "bishop.hpp"
 #include "rook.hpp"
 #include "pawn.hpp"
+#include <fstream>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ void imprimir(Piece*** tablero);
 void chessInit(Piece*** tablero);
 int charToInt(char coordenada);
 bool ganar(Piece*** tablero);
+void Guardar(Piece*** tablero);
 
 int main(int argc, char const *argv[]){
 	const int ROWS = 8;
@@ -38,21 +40,21 @@ int main(int argc, char const *argv[]){
 		int x=0,y=0,x1=0,y1=0;
 		if (turno % 2 == 1) {
 			while(!valid){//ciclo de validacion
-				cout<<"Turno de: "<<nombre1<<endl;
+				cout<<"Turno de: "<< nombre1 <<endl;
 				cout<<"Ingrese columna de la pieza que desea mover: ";
-				cin>>x;
+				cin >> x ; //Se cambio la variable que obtiene datos
 				x--;
 				cout<<"Ingrese fila de la pieza que desea mover: ";
-				cin >> coordenada1;
-				y = charToInt(coordenada1);
+				cin >> y;
+				y --; //Se hizo su substraccion para agarrar su posicion real dentro de la matriz
 				cout<<"Ingrese columna a la desea mover la pieza: ";
-				cin>>x1;
+				cin >> x1;
 				x1--;
 				cout<<"Ingrese fila a la desea mover la pieza: : ";
-				cin >> coordenada2;
-				y1 = charToInt(coordenada2);
+				cin >> y1;
+				y1 --;
 				Position pos(x1,y1);
-				if (tablero[y][x]->getColor()=='B' && tablero[y][x] != NULL){//validacion de mover
+				if (tablero[y][x]->getColor()=='N' && tablero[y][x] != NULL){//validacion de mover
 					if(tablero[y][x]->moveTo(tablero,pos))
 						valid = true;//variable de validacion
 					else
@@ -69,17 +71,17 @@ int main(int argc, char const *argv[]){
 				cin>>x;
 				x--;
 				cout<<"Ingrese fila de la pieza que desea mover: ";
-				cin >> coordenada1;
-				y = charToInt(coordenada1);
+				cin >> y; //Se cambio la variable que obtiene datos
+				y --; //Se hizo su substraccion para agarrar su posicion real dentro de la matriz
 				cout<<"Ingrese columna a la desea mover la pieza: ";
 				cin>>x1;
 				x1--;
 				cout<<"Ingrese fila a la desea mover la pieza: : ";
-				cin >> coordenada2;
-				y1 = charToInt(coordenada2);
+				cin >> y1; //Se cambio la variable que obtiene datos
+				y1 --; //Se hizo su substraccion para agarrar su posicion real dentro de la matriz
 
 				Position pos(x1,y1);
-				if (tablero[y][x]->getColor()=='N' && tablero[y][x] != NULL){//validacion de mover
+				if (tablero[y][x]->getColor()=='B' && tablero[y][x] != NULL){//validacion de mover
 					if(tablero[y][x]->moveTo(tablero,pos))
 						valid = true;//variable de validacion
 					else
@@ -89,7 +91,17 @@ int main(int argc, char const *argv[]){
 				}
 			}
 		}
+		Guardar(tablero);
 		gano = ganar(tablero);
+		if (gano == true)
+		{
+			if ( remove ( "chess.alv") != 0)
+			{
+				cout<<"Error borrando archivo"<<endl;
+			}else{
+				cout<<"El archivo se borro exitosamente!"<<endl;
+			}
+		}
 	}
 
 	destruirTablero(tablero,ROWS,COLS);
@@ -124,10 +136,10 @@ void imprimir(Piece*** tablero){//imprimir tablero
 			else
 				cout << "[ ]";
 		}
-		cout << letras[i] << endl;
+		cout << numeros[i] << endl;
 	}
 	for (int i = 0; i < 8; ++i)	{
-		cout << " " << numeros[i] << " ";
+		cout << " " << letras[i] << " ";
 	}
 	cout << endl;
 }
@@ -222,4 +234,12 @@ bool ganar(Piece*** tablero){
 		return true;
 	}
 	return false;
+}
+
+
+void Guardar(Piece*** tablero){
+	ofstream archivo;
+	archivo.open("chess.alv" , ios::out | ios::binary);
+	archivo.write(reinterpret_cast<char *> (&tablero), sizeof(tablero));
+	archivo.close();
 }

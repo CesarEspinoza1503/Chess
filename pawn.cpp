@@ -14,9 +14,10 @@ Pawn::Pawn(char color, int x, int y):Piece(color,x,y){//constructor
 bool Pawn::isValidMove(Piece*** board, Position destiny){
 	int diffY = abs(position.getY()-destiny.getY());
 	if(color == 'N'){
-		int diffX = position.getX()-destiny.getX();
-		if((diffY==1&&diffX==0) || (diffY==2&&firstMove&&diffX==0)){ //primer movimiento o movimiento hacia adelante
+		int diffX = abs(position.getX()-destiny.getX()); // se agarra el valor absoluto
+		if((diffY ==1&&diffX==0) || (diffY==2&&firstMove&&diffX==0)){ //primer movimiento o movimiento hacia adelante
 			if(board[destiny.getY()][destiny.getX()] == NULL)
+				firstMove = false; // validar que no se puede mover 2 mas despues de primer movimiento
 				return true;
 			return false;
 		}
@@ -29,13 +30,14 @@ bool Pawn::isValidMove(Piece*** board, Position destiny){
 			return false;
 		}
 	} else if(color == 'B'){
-		int diffX = destiny.getX()-position.getX();
+		int diffX = abs(destiny.getX()-position.getX()); // se agarra el valor absoluto
 		if((diffY==1&&diffX==0) || (diffY==2&&firstMove&&diffX==0)){ //primer movimiento o movimiento hacia adelante
 			if(board[destiny.getY()][destiny.getX()] == NULL)
+				firstMove = false; // validar que no se puede mover 2 mas despues de primer movimiento
 				return true;
 			return false;
 		}
-		else if((diffY==1&&diffX==1)){
+		else if((diffY== 1 && diffX ==1)){
 			if(board[destiny.getY()][destiny.getX()]->getColor() != color) //comer en diagonal
 				return true;
 			return false;
